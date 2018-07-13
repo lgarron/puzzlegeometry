@@ -3,7 +3,7 @@
 
 export class Quat {
    static eps = 1e-9 ;
-   a:number=0; b:number=0; c:number=0; d:number=0;
+   a:number; b:number; c:number; d:number;
    constructor(a_:number, b_:number, c_:number, d_:number) {
       this.a = a_ ; this.b = b_ ; this.c = c_ ; this.d = d_ ;
    }

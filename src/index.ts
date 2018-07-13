@@ -4,3 +4,6 @@ export {
 export {
    PlatonicGenerator
 } from "./PlatonicGenerator"
+export {
+   Perm
+} from "./Perm"
