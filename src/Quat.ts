@@ -80,13 +80,13 @@ export class Quat {
    rotatepoint(q:Quat):Quat { // rotate a point
       return q.mul(this).mul(q.invrot()) ;
    }
-   rotateface(face:any):any { // rotate a face by this Q.
+   rotateface(face:Array<Quat>):Array<Quat> { // rotate a face by this Q.
       var that = this ;
       return face.map((_:Quat)=>_.rotatepoint(that)) ;
    }
-   rotatecubie(cubie:any):any { // rotate a cubie by this Q.
+   rotatecubie(cubie:Array<Array<Quat>>):Array<Array<Quat>> { // rotate a cubie by this Q.
       var that = this ;
-      return cubie.map((_:Quat)=>that.rotateface(_)) ;
+      return cubie.map((_:Array<Quat>)=>that.rotateface(_)) ;
    }
    intersect3(p2:Quat, p3:Quat) { // intersect three planes if there is one
       var det = this.det3x3(this.b, this.c, this.d,
@@ -102,7 +102,7 @@ export class Quat {
                   this.det3x3(this.b, this.c, this.a,
                               p2.b, p2.c, p2.a, p3.b, p3.c, p3.a)/det) ;
    }
-   solvethreeplanes(p1:number, p2:number, p3:number, planes:any):any {
+   solvethreeplanes(p1:number, p2:number, p3:number, planes:Array<Quat>):any {
    // find intersection of three planes but only if interior
    // Takes three indices into a plane array, and returns the point at the
    // intersection of all three, but only if it is internal to all planes.
@@ -127,7 +127,8 @@ export class Quat {
          return -1 ;
       return 0 ;
    }
-   cutfaces(faces:any):any { // Cut a set of faces by a plane and return new set
+   cutfaces(faces:Array<Array<Quat>>):Array<Array<Quat>> { 
+     // Cut a set of faces by a plane and return new set
       var that = this ; // welcome to Javascript
       var d = this.a ;
       var nfaces = [] ;
@@ -162,7 +163,7 @@ export class Quat {
       }
       return nfaces ;
    }
-   faceside(face:any):number { // which side of a plane is a face on?
+   faceside(face:Array<Quat>):number { // which side of a plane is a face on?
       var d = this.a ;
       for (var i=0; i<face.length; i++) {
          var s = this.side(face[i].dot(this)-d) ;
@@ -171,7 +172,8 @@ export class Quat {
       }
       throw "Could not determine side of plane in faceside" ;
    }
-   expandfaces(rots:any, faces:any):any { // given a set of faces, expand by rotation set
+   expandfaces(rots:Array<Quat>, faces:Array<Array<Quat>>):Array<Array<Quat>> {
+      // given a set of faces, expand by rotation set
       var nfaces = [] ;
       for (var i=0; i<rots.length; i++) {
          for (var k=0; k<faces.length; k++) {
@@ -189,7 +191,7 @@ export class Quat {
       var b = p.normalize() ;
       return a.dist(b) < eps || a.dist(b.smul(-1)) < eps ;
    }
-   centermassface(face:any):Quat {
+   centermassface(face:Array<Quat>):Quat {
       // calculate a center of a face by averaging points
       var s = new Quat(0, 0, 0, 0) ;
       for (var i=0; i<face.length; i++)
