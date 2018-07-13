@@ -163,7 +163,7 @@ export class Quat {
       }
       throw "Could not determine side of plane in faceside" ;
    }
-   expandfaces(rots:Array<Quat>, faces:Array<Array<Quat>>):Array<Array<Quat>> {
+   static expandfaces(rots:Array<Quat>, faces:Array<Array<Quat>>):Array<Array<Quat>> {
       // given a set of faces, expand by rotation set
       var nfaces = [] ;
       for (var i=0; i<rots.length; i++) {
@@ -182,7 +182,7 @@ export class Quat {
       var b = p.normalize() ;
       return a.dist(b) < Quat.eps || a.dist(b.smul(-1)) < Quat.eps ;
    }
-   centermassface(face:Array<Quat>):Quat {
+   static centermassface(face:Array<Quat>):Quat {
       // calculate a center of a face by averaging points
       var s = new Quat(0, 0, 0, 0) ;
       for (var i=0; i<face.length; i++)

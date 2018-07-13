@@ -53,9 +53,9 @@ export class PuzzleGeometry {
    cubievaluemap: Array<number> ; // the map for identical cubies
    cubiesetcubies: Array<Array<number>> ; // cubies in each cubie set
    movesbyslice: Array<any> ;  // move as perms by slice
-   cmovesbyslice: Array<any> ; // cmoves as perms by slice
+   cmovesbyslice: Array<any>=[] ; // cmoves as perms by slice
 // options
-   verbose: number ;           // verbosity (console.log)
+   verbose: number=1 ;         // verbosity (console.log)
    allmoves: boolean = true ;  // generate all slice moves in ksolve
    outerblockmoves: boolean ;  // generate outer block moves
    vertexmoves: boolean ;      // generate vertex moves
@@ -427,12 +427,12 @@ export class PuzzleGeometry {
       return this.facetocubies[this.findface(face)][0] ;
    }
    findface(face:Array<Quat>):number {
-      var cm = Quat.prototype.centermassface(face) ;
+      var cm = Quat.centermassface(face) ;
       var key = this.keyface(face) ;
       for (var i=0; i<this.facelisthash[key].length; i++) {
          var face2 = this.facelisthash[key][i] ;
          if (Math.abs(cm.dist(
-                     Quat.prototype.centermassface(this.faces[face2]))) < PuzzleGeometry.eps)
+                     Quat.centermassface(this.faces[face2]))) < PuzzleGeometry.eps)
             return face2 ;
       }
       throw "Could not find face." ;
@@ -465,7 +465,7 @@ export class PuzzleGeometry {
    // We do enough work here to display the cube on the screen.
    // take our newly split base face and expand it by the rotation matrix.
    // this generates our full set of "stickers".
-      this.faces = Quat.prototype.expandfaces(this.baseplanerot, this.faces) ;
+      this.faces = Quat.expandfaces(this.baseplanerot, this.faces) ;
       if (this.verbose) console.log("# Total stickers is now " + this.faces.length) ;
       // Split moveplanes into a list of parallel planes.
       var moveplanesets = [] ;
@@ -603,8 +603,8 @@ export class PuzzleGeometry {
          var s = this.keyface(cubie[0]) ;
          var facelist = facelisthash[s] ;
          var cm = cubie.map(
-                       function(_){return Quat.prototype.centermassface(_)}) ;
-         var cmall = Quat.prototype.centermassface(cm) ;
+                       function(_){return Quat.centermassface(_)}) ;
+         var cmall = Quat.centermassface(cm) ;
          for (var looplimit=0; ; looplimit++) {
             var changed = false ;
             for (var i=0; i<cubie.length; i++) {
