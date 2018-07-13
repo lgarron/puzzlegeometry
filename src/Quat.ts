@@ -1,17 +1,8 @@
-//  Global epsilon; any difference less than this is ignored.
-//  We need to package this better.
-//  This code is *not* efficient in its puzzle construction, as it
-//  always uses simple lists and simple distance functions when
-//  uniquifying sets of objects.  We accept this to keep the code
-//  simple for now.
-//  We have a lot of randomish geometry stuff in here too.
-
-var eps = 1e-9 ;
-
 // We need a quaternion class.  We use this to represent rotations,
 // planes, and points.
 
 export class Quat {
+   static eps = 1e-9 ;
    a:number=0; b:number=0; c:number=0; d:number=0;
    constructor(a_:number, b_:number, c_:number, d_:number) {
       this.a = a_ ; this.b = b_ ; this.c = c_ ; this.d = d_ ;
@@ -92,7 +83,7 @@ export class Quat {
       var det = this.det3x3(this.b, this.c, this.d,
                             p2.b, p2.c, p2.d,
                             p3.b, p3.c, p3.d) ;
-      if (Math.abs(det) < eps)
+      if (Math.abs(det) < Quat.eps)
          return false ;
       return new Quat(0,
                   this.det3x3(this.a, this.c, this.d,
@@ -121,9 +112,9 @@ export class Quat {
    }
    side(x:number):number {
    // is this point close to the origin, or on one or the other side?
-      if (x > eps)
+      if (x > Quat.eps)
          return 1 ;
-      if (x < -eps)
+      if (x < -Quat.eps)
          return -1 ;
       return 0 ;
    }
@@ -189,7 +180,7 @@ export class Quat {
    sameplane(p:Quat):boolean { // are two planes the same?
       var a = this.normalize() ;
       var b = p.normalize() ;
-      return a.dist(b) < eps || a.dist(b.smul(-1)) < eps ;
+      return a.dist(b) < Quat.eps || a.dist(b.smul(-1)) < Quat.eps ;
    }
    centermassface(face:Array<Quat>):Quat {
       // calculate a center of a face by averaging points
