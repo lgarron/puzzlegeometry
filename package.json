@@ -1,0 +1,27 @@
+{
+  "name": "puzzlegeometry",
+  "version": "0.1.0",
+  "description": "Build twisty puzzles from geometric descriptions",
+  "author": "Tomas Rokicki <rokicki@gmail.com)",
+  "license": "MIT",
+  "main": "./dist/libTemplate.js",
+  "types": "./dist/index.d.ts",
+  "dependencies": {
+    "yarn": "^1.7.0"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.1.4",
+    "@types/mocha": "^5.2.3",
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0",
+    "ts-loader": "^4.4.2",
+    "ts-node": "^7.0.0",
+    "typescript": "^2.9.2",
+    "webpack": "^4.12.2",
+    "webpack-cli": "^3.0.8",
+    "webpack-notifier": "^1.6.0"
+  },
+  "scripts": {
+    "prepublish": "make dist"
+  }
+}
