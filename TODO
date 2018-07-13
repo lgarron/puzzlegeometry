@@ -1,3 +1,19 @@
+Integration milestones:
+
+1.  Make it work as the hack branch does, with puzzle selection and
+    replay of fixed set of moves.
+
+2.  Add ability for user to see possible moves, enter algorithm, step
+    through algorithm, for basic moves.
+
+3.  Make options (block vs slice, allmoves, etc.) accessible from UI.
+
+4.  Click-drag moves?
+
+5.  Add full puzzle rotation (as moves)?  Play with this.
+
+6.  Fix colors and nets for puzzles.
+
 Intended command-line usage:
 
 Pick slices:
