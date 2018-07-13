@@ -10,3 +10,6 @@ export {
 export {
    Perm
 } from "./Perm"
+export {
+   SchreierSims
+} from "./SchreierSims" ;
