@@ -1187,7 +1187,7 @@ export class PuzzleGeometry {
       }
       return new Perm(r) ;
    }
-   getpuzzles():Array<string> {
+   static getpuzzles():Array<string> {
    // get some simple definitions of basic puzzles
       return [
          "c f 0", "2x2x2",
@@ -1235,7 +1235,7 @@ export class PuzzleGeometry {
          "i v 0.73", "icosahedron moving faces",
       ] ;
    }
-   parsedesc(s:string):any { // parse a text description
+   static parsedesc(s:string):any { // parse a text description
       var a = s.split(/ /).filter(Boolean) ;
       if (a.length % 2 == 0)
          return false ;

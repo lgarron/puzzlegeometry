@@ -17,7 +17,7 @@ var docanon = false ;
 if (typeof(process) !== 'undefined' &&
     process.argv && process.argv.length >= 3) {
    var desc = undefined ;
-   var puzzleList = PuzzleGeometry.prototype.getpuzzles() ;
+   var puzzleList = PuzzleGeometry.getpuzzles() ;
    var argp = 2 ;
    var optionlist = [] ;
    var showargs = true ;
@@ -65,7 +65,7 @@ if (typeof(process) !== 'undefined' &&
    if (showargs)
       console.log("# " + process.argv.join(" ")) ;
    if (desc != undefined) {
-      createargs = PuzzleGeometry.prototype.parsedesc(desc) ;
+      createargs = PuzzleGeometry.parsedesc(desc) ;
       argp++ ;
    } else {
       var cuts = [] ;
