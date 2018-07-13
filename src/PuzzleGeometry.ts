@@ -56,7 +56,7 @@ export class PuzzleGeometry {
    cmovesbyslice: Array<any>=[] ; // cmoves as perms by slice
 // options
    verbose: number=1 ;         // verbosity (console.log)
-   allmoves: boolean = true ;  // generate all slice moves in ksolve
+   allmoves: boolean = false ; // generate all slice moves in ksolve
    outerblockmoves: boolean ;  // generate outer block moves
    vertexmoves: boolean ;      // generate vertex moves
    movelist: any ;             // move list to generate
