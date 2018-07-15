@@ -1,18 +1,14 @@
 Integration milestones:
 
-1.  Make it work as the hack branch does, with puzzle selection and
-    replay of fixed set of moves.
+1.  Allow conventional notation for Skewb, etc; also, rotations.
 
-2.  Add ability for user to see possible moves, enter algorithm, step
-    through algorithm, for basic moves.
+2.  Make options (block vs slice, allmoves, etc.) accessible from UI.
 
-3.  Make options (block vs slice, allmoves, etc.) accessible from UI.
+3.  Click-drag moves?
 
-4.  Click-drag moves?
+4.  Add full puzzle rotation (as moves)?  Play with this.
 
-5.  Add full puzzle rotation (as moves)?  Play with this.
-
-6.  Fix colors and nets for puzzles.
+5.  Fix colors and nets for puzzles.
 
 Intended command-line usage:
 
@@ -54,6 +50,8 @@ PuzzleGeometry:
   and should support outer block moves, slice moves, as well as
   vertex/face/edge names based on the given net.  It should also
   support suffixes (so U2 means just double-spins of U).
+  [This almost works; for ksolve but no amount (U2) support; for
+  gap; not for ss.  Fix it for ss and add amount support.]
 
 * Add methods to override default net, colors, move names
 
