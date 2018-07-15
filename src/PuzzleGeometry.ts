@@ -60,6 +60,7 @@ export class PuzzleGeometry {
    outerblockmoves: boolean ;  // generate outer block moves
    vertexmoves: boolean ;      // generate vertex moves
    movelist: any ;             // move list to generate
+   parsedmovelist: any ;       // parsed move list
    cornersets: boolean = true ; // include corner sets
    centersets: boolean = true ; // include center sets
    edgesets: boolean = true ;   // include edge sets
@@ -163,6 +164,8 @@ export class PuzzleGeometry {
                this.centersets = optionlist[i+1] ;
             else if (optionlist[i] == "edgesets")
                this.edgesets = optionlist[i+1] ;
+            else if (optionlist[i] == "movelist")
+               this.movelist = optionlist[i+1] ;
             else
                throw "Bad option while processing option list " + optionlist[i] ;
          }
@@ -738,6 +741,89 @@ export class PuzzleGeometry {
       // show the orbits
       if (this.verbose) console.log("# Cubie orbit sizes " + cubieords) ;
    }
+   spinmatch(a:string, b:string):boolean {
+      // are these the same rotationally?
+      if (a == b)
+         return true ;
+      if (a.length != b.length)
+         return false ;
+      for (var i=0; i<a.length; i++)
+         if (a[i] == b[0]) {
+            for (var j=0; j<b.length; j++)
+               if (a[(i+j)%a.length] != b[j])
+                  return false ;
+            return true ;
+         }
+      return false ;
+   }
+   parsemove(mv:string):any { // parse a move from the command line
+      var re = RegExp("^(([0-9]+)-)?([0-9]+)?([A-Za-z]+)([-'0-9]+)?$") ;
+      var p = mv.match(re) ;
+      if (p == null)
+         throw "Bad move passed " + mv ;
+      var grip = p[4] ;
+      var geo = undefined ;
+      var msi = -1 ;
+      var upperCaseGrip = grip.toUpperCase() ;
+      var firstgrip = false ;
+      for (var i=0; i<this.movesetgeos.length; i++) {
+         var g = this.movesetgeos[i] ;
+         if (this.spinmatch(g[0], upperCaseGrip)) {
+            firstgrip = true ;
+            geo = g ;
+            msi = i ;
+         }
+         if (this.spinmatch(g[2], upperCaseGrip)) {
+            firstgrip = false ;
+            geo = g ;
+            msi = i ;
+         }
+      }
+      var loslice = 1 ;
+      var hislice = 1 ;
+      if (upperCaseGrip != grip) {
+         hislice = 2 ;
+      }
+      if (geo == undefined)
+         throw "Bad grip in move " + mv ;
+      if (p[2] != undefined) {
+         if (p[3] == undefined)
+            throw "Missing second number in range" ;
+         loslice = parseInt(p[2]) ;
+      }
+      if (p[3] != undefined) {
+         if (p[2] == undefined) {
+            hislice = parseInt(p[3]) ;
+            if (upperCaseGrip == grip)
+               loslice = hislice ;
+            else
+               loslice = 1 ;
+         } else {
+            hislice = parseInt(p[3]) ;
+         }
+      }
+      loslice-- ;
+      hislice-- ;
+      if (loslice < 0 || loslice > this.moveplanesets[msi].length ||
+          hislice < 0 || hislice > this.moveplanesets[msi].length)
+         throw "Bad slice spec " + loslice + " " + hislice ;
+      var amountstr = "1" ;
+      var amount = 1 ;
+      if (p[5] != undefined) {
+         amountstr = p[5] ;
+         if (amountstr[0] == "'")
+            amountstr = "-" + amountstr.substring(1) ;
+         if (amountstr[0] == '+')
+            amountstr = amountstr.substring(1) ;
+         else if (amountstr[0] == '-') {
+            if (amountstr == "-")
+               amountstr = "-1" ;
+         }
+         amount = parseInt(amountstr) ;
+      }
+      var r = [mv, msi, loslice, hislice, firstgrip, amount] ;
+      return r ;
+   }
    genperms():void { // generate permutations for moves
       if (this.cmovesbyslice.length > 0) // did this already?
          return ;
@@ -802,6 +888,13 @@ export class PuzzleGeometry {
       }
       this.movesbyslice = movesbyslice ;
       this.cmovesbyslice = cmovesbyslice ;
+      if (this.movelist != undefined) {
+         var parsedmovelist:Array<any> = [] ;
+         // make sure the movelist makes sense based on the geos.
+         for (var i=0; i<this.movelist.length; i++)
+            parsedmovelist.push(this.parsemove(this.movelist[i])) ;
+         this.parsedmovelist = parsedmovelist ;
+      }
    }
    getfaces():Array<Array<Array<number>>> { // get the faces for 3d.
       return this.faces.map(
@@ -818,13 +911,27 @@ export class PuzzleGeometry {
       } ;
    }
    getmovesets(k:number):any {
-   // get the move sets we support based on slices
-   // for even values we omit the middle "slice".  This isn't perfect
-   // but it is what we do for now.
+      // get the move sets we support based on slices
+      // for even values we omit the middle "slice".  This isn't perfect
+      // but it is what we do for now.
+      // if there was a move list specified, pull values from that
       var slices = this.moveplanesets[k].length ;
       if (slices > 30)
          throw "Too many slices for getmovesets bitmasks" ;
       var r = [] ;
+      if (this.parsedmovelist != undefined) {
+         for (var i=0; i<this.parsedmovelist.length; i++) {
+            var parsedmove = this.parsedmovelist[i] ;
+            if (parsedmove[1] != k)
+               continue ;
+            if (parsedmove[4]) {
+               r.push((2<<parsedmove[3])-(1<<parsedmove[2])) ;
+            } else {
+               r.push((2<<(slices-parsedmove[2]))-(1<<(slices-parsedmove[3]))) ;
+            }
+         }
+         return r ;
+      }
       if (this.vertexmoves && !this.allmoves) {
          var msg = this.movesetgeos[k] ;
          if (msg[1] != msg[3]) {
@@ -958,8 +1065,6 @@ export class PuzzleGeometry {
          var allbits = 0 ;
          for (var i=0; i<moveset.length; i++)
             allbits |= moveset[i] ;
-         if (moveset.length == 0)
-            throw "Bad moveset length in writeksolve" ;
          var axiscmoves = this.cmovesbyslice[k] ;
          for (var i=0; i<axiscmoves.length; i++) {
             if (((allbits >> i) & 1) == 0)

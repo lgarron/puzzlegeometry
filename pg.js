@@ -52,6 +52,9 @@ if (typeof(process) !== 'undefined' &&
          optionlist.push('edgesets', false) ;
       } else if (option == "--nocenters") {
          optionlist.push('centersets', false) ;
+      } else if (option == "--moves") {
+         optionlist.push('movelist', process.argv[argp].split(",")) ;
+         argp++ ;
       } else {
          throw "Bad option: " + option ;
       }
