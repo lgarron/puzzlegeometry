@@ -1035,20 +1035,24 @@ export class PuzzleGeometry {
          bits = nbits ;
          inverted++ ;
       }
-      var movename = geo[0] ;
+      var movenameFamily = geo[0];
+      var movenamePrefix = "";
       var hibit = 0 ;
       while (bits >> (1 + hibit))
          hibit++ ;
       if (bits == (1 << hibit)) {
          if (hibit > 0)
-            movename = (hibit + 1) + movename ;
+            movenamePrefix = String(hibit + 1) ;
       } else if (bits == ((2 << hibit) - 1)) {
-         movename = movename.toLowerCase() ;
+         movenameFamily = movenameFamily.toLowerCase() ;
          if (hibit > 1)
-            movename = (hibit + 1) + movename ;
+            movenamePrefix = String(hibit + 1) ;
       } else
          throw "We only support slice and outer block moves right now. " + bits ;
-      return [movename, inverted] ;
+      if (movenameFamily.length > 1) {
+         movenameFamily = `<${movenameFamily}>`
+      }
+      return [movenamePrefix + movenameFamily, inverted] ;
    }
    writeksolve(name:string, fortwisty:boolean):string {
    // write ksolve; mirrored off original q.pl
