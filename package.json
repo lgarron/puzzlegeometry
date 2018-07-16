@@ -4,7 +4,7 @@
   "description": "Build twisty puzzles from geometric descriptions",
   "author": "Tomas Rokicki <rokicki@gmail.com)",
   "license": "MIT",
-  "main": "./dist/libTemplate.js",
+  "main": "./dist/puzzlegeometry.js",
   "types": "./dist/index.d.ts",
   "dependencies": {
     "yarn": "^1.7.0"
